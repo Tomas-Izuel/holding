@@ -12,6 +12,7 @@ import prisma from "@/server/lib/prisma";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { AUTH_TOKEN, METADATA_TOKEN } from "@/types/common";
+import { redirect } from "next/navigation";
 
 export async function register(
   data: RegisterSchemaType
@@ -139,4 +140,11 @@ export async function login(
       cause: 500,
     });
   }
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete(AUTH_TOKEN);
+  cookieStore.delete(METADATA_TOKEN);
+  redirect("/login");
 }

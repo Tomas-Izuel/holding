@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
+    <main className="flex min-h-screen flex-col lg:flex-row">
       <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8 lg:max-w-[50%]">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="mt-16 space-y-2">
@@ -79,6 +79,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
