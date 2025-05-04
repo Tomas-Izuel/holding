@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String       @id @default(uuid())
+  email     String       @unique
+  name      String
+  password  String
+  type      TypeUser     @relation(fields: [typeId], references: [id])
+  typeId    String
+  groups    Group[]
+  analysis  AiAnalysis[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model TypeUser {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions String[] // Ej: ["IA_ANALYSIS", "EXPORT", ...]
+  users       User[]
+}
+
+model Group {
+  id        String         @id @default(uuid())
+  name      String
+  user      User           @relation(fields: [userId], references: [id])
+  userId    String
+  type      TypeInvestment @relation(fields: [typeId], references: [id])
+  typeId    String
+  holdings  Holding[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model TypeInvestment {
+  id           String  @id @default(uuid())
+  name         String // Ej: "Cedears", "Criptomonedas"
+  scrappingUrl String
+  currency     String // Ej: "USD", "ARS"
+  groups       Group[]
+}
+
+model Holding {
+  id        String     @id @default(uuid())
+  name      String // Ej: "Apple", "BTC"
+  code      String // Ej: "AAPL", "BTC"
+  group     Group      @relation(fields: [groupId], references: [id])
+  groupId   String
+  snapshots Snapshot[]
+}
+
+model Snapshot {
+  id         String   @id @default(uuid())
+  holding    Holding  @relation(fields: [holdingId], references: [id])
+  holdingId  String
+  date       DateTime
+  quantity   Float
+  unitPrice  Float // Precio por unidad scrappeado
+  totalValue Float // quantity * unitPrice
+  createdAt  DateTime @default(now())
+
+  @@unique([holdingId, date]) // Solo una snapshot por semana por holding
+}
+
+model AiAnalysis {
+  id      String   @id @default(uuid())
+  user    User     @relation(fields: [userId], references: [id])
+  userId  String
+  date    DateTime @default(now())
+  content String // Texto generado por la IA con insights
+}
