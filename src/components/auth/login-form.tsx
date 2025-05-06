@@ -33,7 +33,7 @@ export function LoginForm() {
       if (response instanceof Error) {
         throw response;
       }
-      router.push(`/${response.metadata.id}`);
+      router.push(`/dashboard`);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error al iniciar sesión";
@@ -53,7 +53,6 @@ export function LoginForm() {
                 <Input
                   placeholder="stanley@gmail.com"
                   type="email"
-                  className="bg-background"
                   {...field}
                 />
               </FormControl>
@@ -68,12 +67,7 @@ export function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input
-                  placeholder="••••••••••••"
-                  type="password"
-                  className="bg-background"
-                  {...field}
-                />
+                <Input placeholder="••••••••••••" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

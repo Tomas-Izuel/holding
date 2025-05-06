@@ -101,3 +101,22 @@ export async function updateGroup(id: string, name: string) {
     });
   }
 }
+
+export async function getTypesInvestment() {
+  const user = await authMiddleware();
+
+  if (user instanceof Error) {
+    throw user;
+  }
+
+  try {
+    const typesInvestment = await prisma.typeInvestment.findMany();
+
+    return typesInvestment;
+  } catch (error) {
+    console.log("[GET TYPES INVESTMENT ERROR]", error);
+    throw new Error("Error al obtener los tipos de inversión", {
+      cause: 500,
+    });
+  }
+}

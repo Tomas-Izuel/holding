@@ -7,6 +7,10 @@ export default async function DashboardPage() {
   return (
     <>
       <h1>¡Hola de nuevo!</h1>
+      <p className="text-muted-foreground">
+        Recuerda que todos los domingos a la 02:00 AM se obtendrán las
+        cotizaciones semanales de tus holdings.
+      </p>
       <section className="flex flex-wrap gap-4 pt-10">
         {groups.length > 0 ? (
           groups.map((group) => (
