@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,19 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { TypeInvestment } from "@/types";
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "El nombre del grupo debe tener al menos 2 caracteres.",
-  }),
-  typeId: z.string().min(1, {
-    message: "Debes seleccionar un tipo de inversión.",
-  }),
-});
+import type { TypeInvestment } from "@prisma/client";
+import { CreateGroupSchema, CreateGroupSchemaType } from "@/types/groups.type";
 
 interface GroupDetailsFormProps {
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  onSubmit: (data: CreateGroupSchemaType) => void;
   investmentTypes: TypeInvestment[];
   initialData?: {
     name: string;
@@ -47,8 +38,8 @@ export function GroupDetailsForm({
   investmentTypes,
   initialData = { name: "", typeId: "" },
 }: GroupDetailsFormProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateGroupSchemaType>({
+    resolver: zodResolver(CreateGroupSchema),
     defaultValues: initialData,
   });
 

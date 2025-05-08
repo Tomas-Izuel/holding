@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { PlusCircle, X, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -17,18 +16,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Holding, TypeInvestment } from "@/types";
-
-const holdingSchema = z.object({
-  name: z.string().min(1, { message: "El nombre es requerido" }),
-  code: z.string().min(1, { message: "El código es requerido" }),
-});
+import type { TypeInvestment } from "@prisma/client";
+import {
+  CreateHoldingSchema,
+  CreateHoldingSchemaType,
+} from "@/types/groups.type";
 
 interface AddHoldingsFormProps {
-  onSubmit: (holdings: Holding[]) => void;
+  onSubmit: (holdings: CreateHoldingSchemaType[]) => void;
   onSkip: () => void;
   onBack: () => void;
-  initialHoldings: Holding[];
+  initialHoldings: CreateHoldingSchemaType[];
   groupTypeId: string;
   investmentTypes: TypeInvestment[];
 }
@@ -48,20 +46,32 @@ export function AddHoldingsForm({
   groupTypeId,
   investmentTypes,
 }: AddHoldingsFormProps) {
-  const [holdings, setHoldings] = useState<Holding[]>(initialHoldings);
+  const [holdings, setHoldings] =
+    useState<CreateHoldingSchemaType[]>(initialHoldings);
   const selectedType = investmentTypes.find((type) => type.id === groupTypeId);
 
-  const form = useForm<z.infer<typeof holdingSchema>>({
-    resolver: zodResolver(holdingSchema),
+  const form = useForm<CreateHoldingSchemaType>({
+    resolver: zodResolver(CreateHoldingSchema),
     defaultValues: {
       name: "",
       code: "",
     },
   });
 
-  const addHolding = (data: z.infer<typeof holdingSchema>) => {
-    const newHolding: Holding = {
-      id: `temp-${Date.now()}`, // ID temporal, el servidor asignará uno real
+  const addHolding = (data: CreateHoldingSchemaType) => {
+    const isDuplicate = holdings.some(
+      (holding) => holding.code.toLowerCase() === data.code.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      form.setError("code", {
+        type: "manual",
+        message: "Ya existe un holding con este código",
+      });
+      return;
+    }
+
+    const newHolding: CreateHoldingSchemaType = {
       name: data.name,
       code: data.code,
     };
@@ -70,8 +80,8 @@ export function AddHoldingsForm({
     form.reset();
   };
 
-  const removeHolding = (id: string) => {
-    setHoldings(holdings.filter((holding) => holding.id !== id));
+  const removeHolding = (code: string) => {
+    setHoldings(holdings.filter((holding) => holding.code !== code));
   };
 
   const handleSubmit = () => {
@@ -146,7 +156,7 @@ export function AddHoldingsForm({
               />
             </div>
 
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <motion.div whileTap={{ scale: 0.98 }}>
               <Button
                 type="submit"
                 variant="outline"
@@ -175,7 +185,7 @@ export function AddHoldingsForm({
             <AnimatePresence>
               {holdings.map((holding) => (
                 <motion.div
-                  key={holding.id}
+                  key={holding.code}
                   className="flex items-center justify-between p-3"
                   variants={itemVariants}
                   initial="hidden"
@@ -197,7 +207,7 @@ export function AddHoldingsForm({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => removeHolding(holding.id)}
+                      onClick={() => removeHolding(holding.code)}
                     >
                       <X className="h-4 w-4" />
                     </Button>

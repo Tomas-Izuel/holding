@@ -10,6 +10,8 @@ import { AddHoldingsForm } from "@/components/groups/add-holdings-form";
 import { FormSuccess } from "@/components/groups/form-success";
 import { TypeInvestment } from "@prisma/client";
 import { CreateHoldingSchemaType } from "@/types/groups.type";
+import { createGroup } from "@/server/services/group.service";
+import { toast } from "sonner";
 
 type FormData = {
   name: string;
@@ -57,15 +59,15 @@ export function CreateGroupForm({ typeInvestments }: CreateGroupFormProps) {
   const handleCreateGroup = async () => {
     setIsSubmitting(true);
     try {
-      // Aquí iría la lógica para enviar los datos al servidor
-      console.log("Datos del formulario:", formData);
-
-      // Simulamos una petición al servidor
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Si todo va bien, mantenemos el paso 3 (éxito)
+      await createGroup(formData);
+      toast.success("Grupo creado correctamente");
+      router.push("/groups");
     } catch (error) {
-      console.error("Error al crear el grupo:", error);
+      if (error instanceof Error && error.cause === 400) {
+        toast.error(error.message);
+      } else {
+        toast.error("Error al crear el grupo");
+      }
     } finally {
       setIsSubmitting(false);
     }

@@ -8,6 +8,7 @@ import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Image from "next/image";
 
 interface MobileNavProps {
   items: {
@@ -30,9 +31,13 @@ export function MobileNav({ items }: MobileNavProps) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="pr-0">
-        <div className="flex items-center text-primary mb-8">
-          <div className="h-3 w-3 rounded-full bg-primary mr-2"></div>
-          <span className="font-medium">Finnger</span>
+        <div className="flex items-center text-primary mb-8 p-4">
+          <Image
+            src="/HoldIn-colorized.svg"
+            alt="Holding logo"
+            width={120}
+            height={60}
+          />
         </div>
         <nav className="flex flex-col space-y-3">
           {items.map((item) => (

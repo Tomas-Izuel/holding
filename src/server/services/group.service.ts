@@ -2,6 +2,8 @@
 
 import { authMiddleware } from "@/server/middlewares/auth.middleware";
 import prisma from "@/server/lib/prisma";
+import { GroupDTOSchemaType } from "@/types/groups.type";
+import { createHoldings } from "./holding.service";
 
 export async function getGroups() {
   const user = await authMiddleware();
@@ -26,7 +28,7 @@ export async function getGroups() {
   }
 }
 
-export async function createGroup(name: string) {
+export async function createGroup(data: GroupDTOSchemaType) {
   const user = await authMiddleware();
 
   if (user instanceof Error) {
@@ -34,17 +36,40 @@ export async function createGroup(name: string) {
   }
 
   try {
-    const group = await prisma.group.create({
-      data: {
-        name,
-        user: { connect: { id: user.id } },
-        type: { connect: { id: "1" } },
+    const existingGroup = await prisma.group.findFirst({
+      where: {
+        name: data.name,
+        userId: user.id,
       },
     });
 
-    return group;
+    if (existingGroup) {
+      throw new Error("Ya existe un grupo con este nombre", {
+        cause: 400,
+      });
+    }
+
+    const group = await prisma.group.create({
+      data: {
+        name: data.name,
+        user: { connect: { id: user.id } },
+        type: { connect: { id: data.typeId } },
+      },
+    });
+
+    if (data.holdings) {
+      await createHoldings(data.holdings, group.id);
+    }
+
+    return {
+      ...group,
+      holdings: data.holdings,
+    };
   } catch (error) {
     console.log("[CREATE GROUP ERROR]", error);
+    if (error instanceof Error && error.cause === 400) {
+      throw error;
+    }
     throw new Error("Error al crear el grupo", {
       cause: 500,
     });

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { LogOut, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { logout } from "@/server/services/auth.service";
+import Image from "next/image";
 
 interface SidebarProps {
   items: {
@@ -26,12 +27,13 @@ export function Sidebar({ items, user }: SidebarProps) {
 
   return (
     <div className="hidden md:flex flex-col w-64 border-r bg-background h-screen">
-      <div className="p-6">
-        <div className="flex items-center">
-          <span className="font-medium text-2xl">
-            Hold<span className="text-primary text-3xl">In</span>
-          </span>
-        </div>
+      <div className="p-6 mt-5">
+        <Image
+          src="/HoldIn-colorized.svg"
+          alt="Holding logo"
+          width={120}
+          height={120}
+        />
       </div>
       <div className="flex-1 px-3 py-2">
         <nav className="space-y-1">

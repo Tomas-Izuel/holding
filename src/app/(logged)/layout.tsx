@@ -12,7 +12,7 @@ const navItems = [
   },
   {
     title: "Groups",
-    href: "/dashboard/groups",
+    href: "/groups",
     icon: <Group className="h-5 w-5" />,
   },
   {
@@ -22,7 +22,7 @@ const navItems = [
   },
   {
     title: "Settings",
-    href: "/dashboard/settings",
+    href: "/settings",
     icon: <Settings className="h-5 w-5" />,
   },
 ];
