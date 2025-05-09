@@ -10,7 +10,7 @@ export type AuthUser = {
   name: string;
 };
 
-const CACHE_TTL = 5 * 60; // 5 minutos en segundos
+const CACHE_TTL = 24 * 60 * 60; // 1 día en segundos
 
 export async function authMiddleware(): Promise<AuthUser | Error> {
   try {
