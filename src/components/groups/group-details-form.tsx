@@ -31,12 +31,16 @@ interface GroupDetailsFormProps {
     name: string;
     typeId: string;
   };
+  isEditing?: boolean;
+  isSubmitting?: boolean;
 }
 
 export function GroupDetailsForm({
   onSubmit,
   investmentTypes,
   initialData = { name: "", typeId: "" },
+  isEditing = false,
+  isSubmitting = false,
 }: GroupDetailsFormProps) {
   const form = useForm<CreateGroupSchemaType>({
     resolver: zodResolver(CreateGroupSchema),
@@ -67,6 +71,7 @@ export function GroupDetailsForm({
                     <Input
                       placeholder="Mi portafolio de inversiones"
                       {...field}
+                      disabled={!isEditing || isSubmitting}
                     />
                   </FormControl>
                   <FormDescription>
@@ -92,6 +97,7 @@ export function GroupDetailsForm({
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={!isEditing || isSubmitting}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -117,16 +123,20 @@ export function GroupDetailsForm({
           </motion.div>
         </motion.div>
 
-        <motion.div
-          className="flex justify-end"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button type="submit">Continuar</Button>
+        {isEditing && (
+          <motion.div
+            className="flex justify-end"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Guardando..." : "Guardar cambios"}
+              </Button>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </form>
     </Form>
   );

@@ -2,7 +2,10 @@
 
 import { authMiddleware } from "@/server/middlewares/auth.middleware";
 import prisma from "@/server/lib/prisma";
-import { GroupDTOSchemaType } from "@/types/groups.type";
+import {
+  GroupDTOSchemaType,
+  CreateHoldingSchemaType,
+} from "@/types/groups.type";
 import { createHoldings } from "./holding.service";
 
 export async function getGroups() {
@@ -84,6 +87,26 @@ export async function deleteGroup(id: string) {
   }
 
   try {
+    const group = await prisma.group.findUnique({
+      where: {
+        id,
+        userId: user.id,
+      },
+    });
+
+    if (!group) {
+      throw new Error("Grupo no encontrado", {
+        cause: 404,
+      });
+    }
+
+    // Delete all holdings in the group
+    await prisma.holding.deleteMany({
+      where: {
+        groupId: group.id,
+      },
+    });
+
     await prisma.group.delete({
       where: {
         id,
@@ -100,7 +123,10 @@ export async function deleteGroup(id: string) {
   }
 }
 
-export async function updateGroup(id: string, name: string) {
+export async function updateGroup(
+  id: string,
+  data: { name: string; holdings?: CreateHoldingSchemaType[] }
+) {
   const user = await authMiddleware();
 
   if (user instanceof Error) {
@@ -114,9 +140,21 @@ export async function updateGroup(id: string, name: string) {
         userId: user.id,
       },
       data: {
-        name,
+        name: data.name,
       },
     });
+
+    if (data.holdings) {
+      // Eliminar holdings existentes
+      await prisma.holding.deleteMany({
+        where: {
+          groupId: group.id,
+        },
+      });
+
+      // Crear nuevos holdings
+      await createHoldings(data.holdings, group.id);
+    }
 
     return group;
   } catch (error) {
@@ -141,6 +179,43 @@ export async function getTypesInvestment() {
   } catch (error) {
     console.log("[GET TYPES INVESTMENT ERROR]", error);
     throw new Error("Error al obtener los tipos de inversión", {
+      cause: 500,
+    });
+  }
+}
+
+export async function getGroupById(id: string) {
+  const user = await authMiddleware();
+
+  if (user instanceof Error) {
+    throw user;
+  }
+
+  try {
+    const group = await prisma.group.findUnique({
+      where: {
+        id,
+        userId: user.id,
+      },
+      include: {
+        type: true,
+        holdings: true,
+      },
+    });
+
+    if (!group) {
+      throw new Error("Grupo no encontrado", {
+        cause: 404,
+      });
+    }
+
+    return group;
+  } catch (error) {
+    console.log("[GET GROUP BY ID ERROR]", error);
+    if (error instanceof Error && error.cause === 404) {
+      throw error;
+    }
+    throw new Error("Error al obtener el grupo", {
       cause: 500,
     });
   }

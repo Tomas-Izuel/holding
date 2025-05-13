@@ -104,6 +104,7 @@ export function CreateGroupForm({ typeInvestments }: CreateGroupFormProps) {
                 onSubmit={handleGroupDetailsSubmit}
                 investmentTypes={typeInvestments}
                 initialData={{ name: formData.name, typeId: formData.typeId }}
+                isEditing
               />
             </motion.div>
           )}
@@ -124,6 +125,8 @@ export function CreateGroupForm({ typeInvestments }: CreateGroupFormProps) {
                 initialHoldings={formData.holdings}
                 groupTypeId={formData.typeId}
                 investmentTypes={typeInvestments}
+                isEditing
+                showAllButtons
               />
             </motion.div>
           )}

@@ -29,6 +29,8 @@ interface AddHoldingsFormProps {
   initialHoldings: CreateHoldingSchemaType[];
   groupTypeId: string;
   investmentTypes: TypeInvestment[];
+  isEditing?: boolean;
+  showAllButtons?: boolean;
 }
 
 // Variantes de animación para los elementos de la lista
@@ -45,6 +47,8 @@ export function AddHoldingsForm({
   initialHoldings = [],
   groupTypeId,
   investmentTypes,
+  isEditing = false,
+  showAllButtons = false,
 }: AddHoldingsFormProps) {
   const [holdings, setHoldings] =
     useState<CreateHoldingSchemaType[]>(initialHoldings);
@@ -95,9 +99,11 @@ export function AddHoldingsForm({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <h2 className="text-lg font-medium">Agregar holdings (opcional)</h2>
+        <h2 className="text-lg font-medium">Holdings del grupo</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Agrega los activos que formarán parte de este grupo de inversión.
+          {isEditing
+            ? "Agrega o elimina los activos que formarán parte de este grupo de inversión."
+            : "Activos que forman parte de este grupo de inversión."}
         </p>
       </motion.div>
 
@@ -111,65 +117,69 @@ export function AddHoldingsForm({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Información</AlertTitle>
             <AlertDescription>
-              Estás agregando holdings para un grupo de tipo{" "}
-              <strong>{selectedType.name}</strong> en{" "}
+              Este grupo es de tipo <strong>{selectedType.name}</strong> en{" "}
               <strong>{selectedType.currency}</strong>.
             </AlertDescription>
           </Alert>
         </motion.div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(addHolding)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre del holding</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ej: Apple Inc." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+      {isEditing && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(addHolding)}
+              className="space-y-4"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre del holding</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ej: Apple Inc." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Código del holding</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ej: AAPL" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                <FormField
+                  control={form.control}
+                  name="code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Código del holding</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ej: AAPL" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            <motion.div whileTap={{ scale: 0.98 }}>
-              <Button
-                type="submit"
-                variant="outline"
-                size="sm"
-                className="mt-2"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Agregar holding
-              </Button>
-            </motion.div>
-          </form>
-        </Form>
-      </motion.div>
+              <motion.div whileTap={{ scale: 0.98 }}>
+                <Button
+                  type="submit"
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                >
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Agregar holding
+                </Button>
+              </motion.div>
+            </form>
+          </Form>
+        </motion.div>
+      )}
 
       {holdings.length > 0 && (
         <motion.div
@@ -178,9 +188,7 @@ export function AddHoldingsForm({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.3 }}
         >
-          <h3 className="text-sm font-medium">
-            Holdings agregados ({holdings.length})
-          </h3>
+          <h3 className="text-sm font-medium">Holdings ({holdings.length})</h3>
           <div className="border rounded-md divide-y">
             <AnimatePresence>
               {holdings.map((holding) => (
@@ -200,18 +208,20 @@ export function AddHoldingsForm({
                       {holding.code}
                     </p>
                   </div>
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeHolding(holding.code)}
+                  {isEditing && (
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                     >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </motion.div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeHolding(holding.code)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </motion.div>
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -220,36 +230,32 @@ export function AddHoldingsForm({
       )}
 
       <motion.div
-        className="flex justify-between pt-4"
+        className="flex justify-end pt-4 gap-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.4 }}
       >
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button variant="outline" onClick={onBack}>
-            Atrás
-          </Button>
-        </motion.div>
-        <div className="space-x-2">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{ display: "inline-block" }}
-          >
-            <Button variant="ghost" onClick={onSkip}>
-              Omitir
-            </Button>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{ display: "inline-block" }}
-          >
+        {showAllButtons && (
+          <>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button onClick={onBack} variant="outline">
+                Volver
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button onClick={onSkip} variant="secondary">
+                Saltar
+              </Button>
+            </motion.div>
+          </>
+        )}
+        {isEditing && (
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button onClick={handleSubmit} disabled={holdings.length === 0}>
-              Continuar
+              Guardar holdings
             </Button>
           </motion.div>
-        </div>
+        )}
       </motion.div>
     </div>
   );
