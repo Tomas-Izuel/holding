@@ -6,13 +6,11 @@ import {
 import { notFound } from "next/navigation";
 import React from "react";
 
-interface EditGroupPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function EditGroupPage({ params }: EditGroupPageProps) {
+export default async function EditGroupPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   try {
     const [group, typeInvestments] = await Promise.all([
       getGroupById(params.id),
