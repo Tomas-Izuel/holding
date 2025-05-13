@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CheckCircle2, ArrowRight, Plus, ListPlus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import type { Holding } from "@/types";
+import { Holding } from "@prisma/client";
 
 interface FormSuccessProps {
   onFinish: () => void;
@@ -215,7 +215,7 @@ export function FormSuccess({
           >
             <h2 className="text-2xl font-bold">¡Grupo creado con éxito!</h2>
             <p className="text-muted-foreground mt-2">
-              Tu grupo "{groupData.name}" ha sido creado correctamente
+              Tu grupo {groupData.name} ha sido creado correctamente
               {groupData.holdings.length > 0
                 ? ` con ${groupData.holdings.length} holdings.`
                 : "."}
