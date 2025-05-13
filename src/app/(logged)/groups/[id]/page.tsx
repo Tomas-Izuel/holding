@@ -4,16 +4,17 @@ import {
   getTypesInvestment,
 } from "@/server/services/group.service";
 import { notFound } from "next/navigation";
-import React from "react";
 
 export default async function EditGroupPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+
   try {
     const [group, typeInvestments] = await Promise.all([
-      getGroupById(params.id),
+      getGroupById(id),
       getTypesInvestment(),
     ]);
 
