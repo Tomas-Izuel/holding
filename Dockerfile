@@ -24,13 +24,6 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Copiar archivos necesarios desde la etapa de construcción
-COPY --from=builder /app/next.config.ts ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/prisma ./prisma
-
 # Instalar solo las dependencias de producción
 RUN npm install --production
 
