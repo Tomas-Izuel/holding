@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CheckCircle2, ArrowRight, Plus, ListPlus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Holding } from "@prisma/client";
+import { CreateHoldingSchemaType } from "@/types/groups.type";
 
 interface FormSuccessProps {
   onFinish: () => void;
@@ -13,7 +13,7 @@ interface FormSuccessProps {
   groupData: {
     name: string;
     typeId: string;
-    holdings: Holding[];
+    holdings: CreateHoldingSchemaType[];
   };
   isSubmitting: boolean;
   onSubmit: () => Promise<void>;
@@ -117,7 +117,7 @@ export function FormSuccess({
                 <div className="mt-2 space-y-2">
                   {groupData.holdings.map((holding, index) => (
                     <motion.div
-                      key={holding.id}
+                      key={holding.code}
                       className="flex justify-between"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
