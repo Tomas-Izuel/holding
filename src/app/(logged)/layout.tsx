@@ -9,21 +9,25 @@ const navItems = [
     title: "Dashboard",
     href: "/dashboard",
     icon: <Home className="h-5 w-5" />,
+    disabled: false,
   },
   {
     title: "Groups",
     href: "/groups",
     icon: <Group className="h-5 w-5" />,
+    disabled: false,
   },
   {
     title: "Upgrade",
     href: "/upgrade",
     icon: <CreditCard className="h-5 w-5" />,
+    disabled: false,
   },
   {
     title: "Settings",
     href: "/settings",
     icon: <Settings className="h-5 w-5" />,
+    disabled: false,
   },
 ];
 

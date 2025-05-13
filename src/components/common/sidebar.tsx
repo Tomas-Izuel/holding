@@ -15,6 +15,7 @@ interface SidebarProps {
     title: string;
     href: string;
     icon?: React.ReactNode;
+    disabled?: boolean;
   }[];
   user: {
     name: string;
@@ -45,7 +46,8 @@ export function Sidebar({ items, user }: SidebarProps) {
                 "flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-colors",
                 pathname === item.href
                   ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                item.disabled && "cursor-not-allowed opacity-50"
               )}
             >
               {item.icon}
