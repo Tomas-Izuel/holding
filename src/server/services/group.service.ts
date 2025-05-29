@@ -7,8 +7,8 @@ import {
   CreateHoldingSchemaType,
 } from "@/types/groups.type";
 import { createHoldings } from "./holding.service";
-
-export async function getGroups() {
+import { Group } from "@prisma/client";
+export async function getGroups(): Promise<Group[]> {
   const user = await authMiddleware();
 
   if (user instanceof Error) {
