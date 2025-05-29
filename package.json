@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "railway": "npm install && npx prisma generate && npm run build"
+    "railway": "npm install && npx prisma generate && npx prisma migrate deploy && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
