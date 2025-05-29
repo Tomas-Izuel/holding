@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "railway": "npm install && npx prisma generate && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
