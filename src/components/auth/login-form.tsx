@@ -84,7 +84,7 @@ export function LoginForm() {
 
         <div className="text-center text-sm">
           No tienes una cuenta?
-          <Link href="/signup" className="text-primary hover:underline">
+          <Link href="/register" className="text-primary hover:underline">
             Regístrate
           </Link>
         </div>
