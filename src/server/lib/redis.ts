@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 
 if (!process.env.REDIS_URL) {
-  throw new Error("REDIS_URL is not defined");
+  throw new Error("REDIS_URL is not defined", { cause: process.env.REDIS_URL });
 }
 
 const redisClient = createClient({
