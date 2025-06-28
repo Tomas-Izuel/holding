@@ -1,5 +1,4 @@
 "use client";
-import { Group } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { Trash2 } from "lucide-react";
@@ -7,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { deleteGroup } from "@/server/services/group.service";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { GetGroupDTO } from "@/types/groups.type";
 
 interface GroupCardProps {
-  group: Group;
+  group: GetGroupDTO;
 }
 
 const GroupCard = ({ group }: GroupCardProps) => {
@@ -35,7 +35,15 @@ const GroupCard = ({ group }: GroupCardProps) => {
       href={`/groups/${group.id}`}
       className="relative text-center text-muted-foreground border border-border rounded-lg h-32 w-64 flex items-center justify-center hover:bg-accent/50 transition-colors cursor-pointer group"
     >
-      {group.name}
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="text-lg font-bold">{group.name}</h2>
+        <span className="text-sm text-muted-foreground opacity-75">
+          {group.type.name}
+        </span>
+        <span className="text-sm text-muted-foreground opacity-50">
+          {group.holdings.length} holdings
+        </span>
+      </div>
       <Button
         variant="ghost"
         size="icon"

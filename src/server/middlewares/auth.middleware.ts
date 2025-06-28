@@ -24,8 +24,6 @@ export async function authMiddleware(): Promise<AuthUser | Error> {
       process.env.JWT_SECRET || "secret"
     ) as AuthUser;
 
-    console.log(decoded);
-
     return decoded;
   } catch (error) {
     console.error("[AUTH MIDDLEWARE ERROR]", error);

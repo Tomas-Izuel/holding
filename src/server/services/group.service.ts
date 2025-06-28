@@ -5,10 +5,11 @@ import prisma from "@/server/lib/prisma";
 import {
   GroupDTOSchemaType,
   CreateHoldingSchemaType,
+  GetGroupDTO,
 } from "@/types/groups.type";
 import { createHoldings } from "./holding.service";
-import { Group } from "@prisma/client";
-export async function getGroups(): Promise<Group[]> {
+
+export async function getGroups(): Promise<GetGroupDTO[]> {
   const user = await authMiddleware();
 
   if (user instanceof Error) {
@@ -19,6 +20,10 @@ export async function getGroups(): Promise<Group[]> {
     const groups = await prisma.group.findMany({
       where: {
         userId: user.id,
+      },
+      include: {
+        type: true,
+        holdings: true,
       },
     });
 

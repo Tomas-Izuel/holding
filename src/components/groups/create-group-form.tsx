@@ -149,7 +149,12 @@ export function CreateGroupForm({ typeInvestments }: CreateGroupFormProps) {
                 onAddMoreHoldings={() => {
                   setStep(2);
                 }}
-                groupData={formData}
+                groupData={{
+                  ...formData,
+                  type:
+                    typeInvestments.find((type) => type.id === formData.typeId)
+                      ?.name || "",
+                }}
                 isSubmitting={isSubmitting}
                 onSubmit={handleCreateGroup}
               />

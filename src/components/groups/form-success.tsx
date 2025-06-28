@@ -12,7 +12,7 @@ interface FormSuccessProps {
   onAddMoreHoldings: () => void;
   groupData: {
     name: string;
-    typeId: string;
+    type: string;
     holdings: CreateHoldingSchemaType[];
   };
   isSubmitting: boolean;
@@ -96,7 +96,7 @@ export function FormSuccess({
                   <span className="text-muted-foreground">
                     Tipo de inversión:
                   </span>
-                  <span className="font-medium">{groupData.typeId}</span>
+                  <span className="font-medium">{groupData.type}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Holdings:</span>
