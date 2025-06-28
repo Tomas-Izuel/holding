@@ -1,16 +1,17 @@
 import { createClient } from "redis";
 
-if (!process.env.REDIS_URL) {
-  throw new Error("REDIS_URL is not defined", { cause: process.env.REDIS_URL });
+let redisClient: ReturnType<typeof createClient> | null = null;
+
+export function getRedisClient() {
+  if (!redisClient) {
+    if (!process.env.REDIS_URL) {
+      throw new Error("REDIS_URL is not defined");
+    }
+    redisClient = createClient({
+      url: process.env.REDIS_URL,
+    });
+    redisClient.on("error", (err) => console.error("[Redis] Error", err));
+    redisClient.connect();
+  }
+  return redisClient;
 }
-
-const redisClient = createClient({
-  url: process.env.REDIS_URL || "redis://localhost:6379",
-});
-
-redisClient.on("error", (err) => console.error("[Redis] Error", err));
-
-// Conectar al iniciar
-redisClient.connect();
-
-export default redisClient;
