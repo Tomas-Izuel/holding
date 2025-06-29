@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { GroupDetailsForm } from "@/components/groups/group-details-form";
 import { AddHoldingsForm } from "@/components/groups/add-holdings-form";
 import { TypeInvestment, Group, Holding } from "@prisma/client";
@@ -23,7 +30,7 @@ interface EditGroupFormProps {
 
 export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: group.name,
@@ -65,6 +72,7 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
       setFormData((prev) => ({ ...prev, holdings }));
       toast.success("Holdings actualizados correctamente");
       router.refresh();
+      setIsOpen(false); // Cerrar el diálogo después de actualizar
     } catch (error) {
       if (error instanceof Error && error.cause === 400) {
         toast.error(error.message);
@@ -77,21 +85,23 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Button
-        variant="outline"
-        onClick={() => setIsEditing(!isEditing)}
-        className="flex items-center gap-2 absolute top-16 right-16"
-      >
-        <Pencil className="h-4 w-4" />
-        {isEditing ? "Cancelar edición" : "Editar grupo"}
-      </Button>
-      {isEditing && (
-        <Card className="p-6 pt-10 space-y-8 relative">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="flex items-center gap-2">
+          <Pencil className="h-4 w-4" />
+          Editar grupo
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Editar grupo</DialogTitle>
+          <DialogDescription>
+            Modifica los detalles del grupo y sus holdings. Los cambios se
+            guardarán automáticamente.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,7 +111,7 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
               onSubmit={handleGroupDetailsSubmit}
               investmentTypes={typeInvestments}
               initialData={{ name: formData.name, typeId: formData.typeId }}
-              isEditing={isEditing}
+              isEditing={true}
               isSubmitting={isSubmitting}
             />
           </motion.div>
@@ -118,11 +128,11 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
               initialHoldings={formData.holdings}
               groupTypeId={formData.typeId}
               investmentTypes={typeInvestments}
-              isEditing={isEditing}
+              isEditing={true}
             />
           </motion.div>
-        </Card>
-      )}
-    </motion.div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

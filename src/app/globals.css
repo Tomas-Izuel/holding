@@ -135,4 +135,60 @@
   h4 {
     @apply text-base font-semibold tracking-tight md:text-lg lg:text-xl mb-1;
   }
+
+  /* Estilos personalizados para la barra de scroll */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: var(--radius);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: var(--radius);
+    transition: background-color 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-foreground);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--muted);
+  }
+
+  /* Estilos para Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted-foreground) var(--muted);
+  }
+
+  /* Estilos específicos para elementos con scroll */
+  .scrollable {
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted-foreground) var(--muted);
+  }
+
+  .scrollable::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollable::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+  }
+
+  .scrollable::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: var(--radius-sm);
+  }
+
+  .scrollable::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-foreground);
+  }
 }

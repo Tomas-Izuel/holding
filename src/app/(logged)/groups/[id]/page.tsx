@@ -1,4 +1,4 @@
-import { EditGroupForm } from "@/components/groups/edit-group-form";
+import { EditGroupButton } from "@/components/groups/edit-group-button";
 import GroupHoldingsView from "@/components/groups/group-holdings-view";
 import {
   getGroupById,
@@ -21,13 +21,21 @@ export default async function EditGroupPage({
 
     return (
       <>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Detalles del grupo</h1>
-          <p className="text-muted-foreground mt-2">
-            Visualiza y edita los detalles de tu grupo de inversiones.
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Detalles del grupo</h1>
+            <p className="text-muted-foreground mt-2">
+              Tipo de inversión: {group.type.name}
+            </p>
+            <p className="text-muted-foreground mt-2">
+              Moneda: {group.type.currency}
+            </p>
+            <p className="text-muted-foreground mt-2">
+              Fecha de creación: {group.createdAt.toLocaleDateString()}
+            </p>
+          </div>
+          <EditGroupButton group={group} typeInvestments={typeInvestments} />
         </div>
-        <EditGroupForm group={group} typeInvestments={typeInvestments} />
 
         <GroupHoldingsView holdings={group.holdings} />
       </>
