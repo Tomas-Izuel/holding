@@ -8,16 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String       @id @default(uuid())
-  email     String       @unique
+  id        String   @id @default(uuid())
+  email     String   @unique
   name      String
   password  String
-  type      TypeUser     @relation(fields: [typeId], references: [id])
+  type      TypeUser @relation(fields: [typeId], references: [id])
   typeId    String
   groups    Group[]
-  analysis  AiAnalysis[]
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model TypeUser {
@@ -48,31 +47,12 @@ model TypeInvestment {
 }
 
 model Holding {
-  id        String     @id @default(uuid())
+  id        String @id @default(uuid())
   name      String // Ej: "Apple", "BTC"
   code      String // Ej: "AAPL", "BTC"
-  group     Group      @relation(fields: [groupId], references: [id])
+  group     Group  @relation(fields: [groupId], references: [id])
   groupId   String
-  snapshots Snapshot[]
-}
-
-model Snapshot {
-  id         String   @id @default(uuid())
-  holding    Holding  @relation(fields: [holdingId], references: [id])
-  holdingId  String
-  date       DateTime
-  quantity   Float
-  unitPrice  Float // Precio por unidad scrappeado
-  totalValue Float // quantity * unitPrice
-  createdAt  DateTime @default(now())
-
-  @@unique([holdingId, date]) // Solo una snapshot por semana por holding
-}
-
-model AiAnalysis {
-  id      String   @id @default(uuid())
-  user    User     @relation(fields: [userId], references: [id])
-  userId  String
-  date    DateTime @default(now())
-  content String // Texto generado por la IA con insights
+  quantity  Float
+  lastPrice Float?
+  earnings  Float?
 }

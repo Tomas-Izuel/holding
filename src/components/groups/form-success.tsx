@@ -127,6 +127,9 @@ export function FormSuccess({
                         {holding.name}
                       </span>
                       <span className="font-medium">{holding.code}</span>
+                      <span className="font-medium">
+                        {holding.quantity} Holdings
+                      </span>
                     </motion.div>
                   ))}
                 </div>

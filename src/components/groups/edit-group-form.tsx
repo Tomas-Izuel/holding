@@ -82,45 +82,47 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="p-6 pt-10 space-y-8 relative">
-        <Button
-          variant="outline"
-          onClick={() => setIsEditing(!isEditing)}
-          className="flex items-center gap-2 absolute top-4 right-6"
-        >
-          <Pencil className="h-4 w-4" />
-          {isEditing ? "Cancelar edición" : "Editar grupo"}
-        </Button>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <GroupDetailsForm
-            onSubmit={handleGroupDetailsSubmit}
-            investmentTypes={typeInvestments}
-            initialData={{ name: formData.name, typeId: formData.typeId }}
-            isEditing={isEditing}
-            isSubmitting={isSubmitting}
-          />
-        </motion.div>
+      <Button
+        variant="outline"
+        onClick={() => setIsEditing(!isEditing)}
+        className="flex items-center gap-2 absolute top-16 right-16"
+      >
+        <Pencil className="h-4 w-4" />
+        {isEditing ? "Cancelar edición" : "Editar grupo"}
+      </Button>
+      {isEditing && (
+        <Card className="p-6 pt-10 space-y-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <GroupDetailsForm
+              onSubmit={handleGroupDetailsSubmit}
+              investmentTypes={typeInvestments}
+              initialData={{ name: formData.name, typeId: formData.typeId }}
+              isEditing={isEditing}
+              isSubmitting={isSubmitting}
+            />
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <AddHoldingsForm
-            onSubmit={handleHoldingsSubmit}
-            onSkip={() => {}}
-            onBack={() => {}}
-            initialHoldings={formData.holdings}
-            groupTypeId={formData.typeId}
-            investmentTypes={typeInvestments}
-            isEditing={isEditing}
-          />
-        </motion.div>
-      </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <AddHoldingsForm
+              onSubmit={handleHoldingsSubmit}
+              onSkip={() => {}}
+              onBack={() => {}}
+              initialHoldings={formData.holdings}
+              groupTypeId={formData.typeId}
+              investmentTypes={typeInvestments}
+              isEditing={isEditing}
+            />
+          </motion.div>
+        </Card>
+      )}
     </motion.div>
   );
 }

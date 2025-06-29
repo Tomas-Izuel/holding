@@ -27,3 +27,33 @@ export async function createHoldings(
     });
   }
 }
+
+export async function validateHolding(
+  holding: CreateHoldingSchemaType,
+  groupId: string
+) {
+  const group = await prisma.typeInvestment.findUnique({
+    where: {
+      id: groupId,
+    },
+  });
+
+  if (!group) {
+    throw new Error("Grupo no encontrado", {
+      cause: 404,
+    });
+  }
+
+  try {
+    // Simular el tiempo de respuesta del scraper
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    //const isValid = send holding to scrapper
+    return false;
+  } catch (error) {
+    console.log("[VALIDATE HOLDING ERROR]", error);
+    throw new Error("Error al validar el holding", {
+      cause: 500,
+    });
+  }
+}

@@ -138,6 +138,8 @@ export async function updateGroup(
     throw user;
   }
 
+  console.log(data);
+
   try {
     const group = await prisma.group.update({
       where: {

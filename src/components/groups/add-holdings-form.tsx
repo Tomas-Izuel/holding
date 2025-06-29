@@ -21,6 +21,8 @@ import {
   CreateHoldingSchema,
   CreateHoldingSchemaType,
 } from "@/types/groups.type";
+import { validateHolding } from "@/server/services/holding.service";
+import { toast } from "sonner";
 
 interface AddHoldingsFormProps {
   onSubmit: (holdings: CreateHoldingSchemaType[]) => void;
@@ -52,6 +54,7 @@ export function AddHoldingsForm({
 }: AddHoldingsFormProps) {
   const [holdings, setHoldings] =
     useState<CreateHoldingSchemaType[]>(initialHoldings);
+  const [isValidating, setIsValidating] = useState(false);
   const selectedType = investmentTypes.find((type) => type.id === groupTypeId);
 
   const form = useForm<CreateHoldingSchemaType>({
@@ -59,10 +62,11 @@ export function AddHoldingsForm({
     defaultValues: {
       name: "",
       code: "",
+      quantity: 0,
     },
   });
 
-  const addHolding = (data: CreateHoldingSchemaType) => {
+  const addHolding = async (data: CreateHoldingSchemaType) => {
     const isDuplicate = holdings.some(
       (holding) => holding.code.toLowerCase() === data.code.toLowerCase()
     );
@@ -75,13 +79,31 @@ export function AddHoldingsForm({
       return;
     }
 
-    const newHolding: CreateHoldingSchemaType = {
-      name: data.name,
-      code: data.code,
-    };
+    setIsValidating(true);
+    try {
+      const isValid = await validateHolding(data, groupTypeId);
 
-    setHoldings([...holdings, newHolding]);
-    form.reset();
+      if (isValid) {
+        const newHolding: CreateHoldingSchemaType = {
+          name: data.name,
+          code: data.code,
+          quantity: Number(data.quantity),
+        };
+
+        setHoldings([...holdings, newHolding]);
+        form.reset();
+        toast.success("Holding agregado correctamente");
+      } else {
+        toast.error(
+          "El holding no es válido. Verifica el código e intenta nuevamente."
+        );
+      }
+    } catch (error) {
+      console.error("Error al validar holding:", error);
+      toast.error("Error al validar el holding. Intenta nuevamente.");
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   const removeHolding = (code: string) => {
@@ -135,7 +157,7 @@ export function AddHoldingsForm({
               onSubmit={form.handleSubmit(addHolding)}
               className="space-y-4"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -163,6 +185,29 @@ export function AddHoldingsForm({
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cantidad de unidades</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ej: 10"
+                          type="number"
+                          min={0}
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value === "" ? 0 : Number(value));
+                          }}
+                          onBlur={field.onBlur}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <motion.div whileTap={{ scale: 0.98 }}>
@@ -171,9 +216,11 @@ export function AddHoldingsForm({
                   variant="outline"
                   size="sm"
                   className="mt-2"
+                  loading={isValidating}
+                  disabled={isValidating}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" />
-                  Agregar holding
+                  {isValidating ? "Validando..." : "Agregar holding"}
                 </Button>
               </motion.div>
             </form>

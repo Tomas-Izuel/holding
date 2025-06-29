@@ -15,6 +15,11 @@ export const UpdateGroupSchema = z.object({
 export const CreateHoldingSchema = z.object({
   name: z.string().min(1, { message: "El nombre del holding es requerido" }),
   code: z.string().min(1, { message: "El código del holding es requerido" }),
+  quantity: z
+    .number({
+      message: "La cantidad de unidades es requerida",
+    })
+    .positive({ message: "La cantidad de unidades debe ser mayor a 0" }),
 });
 
 export type CreateHoldingSchemaType = z.infer<typeof CreateHoldingSchema>;

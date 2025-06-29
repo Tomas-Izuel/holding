@@ -1,7 +1,7 @@
 import { Header } from "@/components/common/header";
 import { Sidebar } from "@/components/common/sidebar";
 import { getMetadata } from "@/server/utils/common";
-import { CreditCard, Group, Home, Settings } from "lucide-react";
+import { Group, Home } from "lucide-react";
 import { redirect } from "next/navigation";
 
 const navItems = [
@@ -15,18 +15,6 @@ const navItems = [
     title: "Groups",
     href: "/groups",
     icon: <Group className="h-5 w-5" />,
-    disabled: false,
-  },
-  {
-    title: "Upgrade",
-    href: "/upgrade",
-    icon: <CreditCard className="h-5 w-5" />,
-    disabled: false,
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: <Settings className="h-5 w-5" />,
     disabled: false,
   },
 ];

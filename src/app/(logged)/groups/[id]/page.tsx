@@ -1,4 +1,5 @@
 import { EditGroupForm } from "@/components/groups/edit-group-form";
+import GroupHoldingsView from "@/components/groups/group-holdings-view";
 import {
   getGroupById,
   getTypesInvestment,
@@ -27,6 +28,8 @@ export default async function EditGroupPage({
           </p>
         </div>
         <EditGroupForm group={group} typeInvestments={typeInvestments} />
+
+        <GroupHoldingsView holdings={group.holdings} />
       </>
     );
   } catch (error) {
