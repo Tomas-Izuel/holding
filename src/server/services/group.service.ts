@@ -8,6 +8,7 @@ import {
   GetGroupDTO,
 } from "@/types/groups.type";
 import { createHoldings } from "./holding.service";
+import { invalidateDashboardCache } from "./dashboard.service";
 
 export async function getGroups(): Promise<GetGroupDTO[]> {
   const user = await authMiddleware();
@@ -69,6 +70,9 @@ export async function createGroup(data: GroupDTOSchemaType) {
       await createHoldings(data.holdings, group.id);
     }
 
+    // Invalidar cache del dashboard después de crear grupo
+    await invalidateDashboardCache(user.id);
+
     return {
       ...group,
       holdings: data.holdings,
@@ -119,6 +123,9 @@ export async function deleteGroup(id: string) {
       },
     });
 
+    // Invalidar cache del dashboard después de eliminar grupo
+    await invalidateDashboardCache(user.id);
+
     return { message: "Grupo eliminado correctamente" };
   } catch (error) {
     console.log("[DELETE GROUP ERROR]", error);
@@ -162,6 +169,9 @@ export async function updateGroup(
       // Crear nuevos holdings
       await createHoldings(data.holdings, group.id);
     }
+
+    // Invalidar cache del dashboard después de actualizar grupo
+    await invalidateDashboardCache(user.id);
 
     return group;
   } catch (error) {

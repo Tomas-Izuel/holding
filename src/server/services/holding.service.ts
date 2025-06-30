@@ -3,6 +3,7 @@
 import { authMiddleware } from "@/server/middlewares/auth.middleware";
 import prisma from "@/server/lib/prisma";
 import { CreateHoldingSchemaType } from "@/types/groups.type";
+import { invalidateDashboardCache } from "./dashboard.service";
 
 export async function createHoldings(
   holdings: CreateHoldingSchemaType[],
@@ -18,6 +19,9 @@ export async function createHoldings(
     const createdHoldings = await prisma.holding.createMany({
       data: holdings.map((holding) => ({ ...holding, groupId })),
     });
+
+    // Invalidar cache del dashboard después de crear holdings
+    await invalidateDashboardCache(user.id);
 
     return createdHoldings;
   } catch (error) {
