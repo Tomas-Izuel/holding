@@ -47,12 +47,13 @@ model TypeInvestment {
 }
 
 model Holding {
-  id        String @id @default(uuid())
-  name      String // Ej: "Apple", "BTC"
-  code      String // Ej: "AAPL", "BTC"
-  group     Group  @relation(fields: [groupId], references: [id])
-  groupId   String
-  quantity  Float
-  lastPrice Float?
-  earnings  Float?
+  id               String @id @default(uuid())
+  name             String // Ej: "Apple", "BTC"
+  code             String // Ej: "AAPL", "BTC"
+  group            Group  @relation(fields: [groupId], references: [id])
+  groupId          String
+  quantity         Float
+  lastPrice        Float?
+  earnings         Float?
+  relativeEarnings Float? // Porcentaje de ganancia o pérdida en relación al snapshot anterior
 }

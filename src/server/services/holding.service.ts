@@ -53,7 +53,7 @@ export async function validateHolding(
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     //const isValid = send holding to scrapper
-    return false;
+    return true;
   } catch (error) {
     console.log("[VALIDATE HOLDING ERROR]", error);
     throw new Error("Error al validar el holding", {

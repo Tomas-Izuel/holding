@@ -9,7 +9,7 @@ const GroupHoldingsView = ({ holdings }: GroupHoldingsViewProps) => {
   return (
     <section>
       <h2>Holdings</h2>
-      <ul>
+      <ul className="space-y-4">
         {holdings.map((holding) => (
           <HoldingView key={holding.id} holding={holding} />
         ))}
