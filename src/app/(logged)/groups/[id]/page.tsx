@@ -18,7 +18,7 @@ export default async function EditGroupPage({
       getGroupById(id),
       getTypesInvestment(),
     ]);
-
+.
     return (
       <>
         <div className="mb-8 flex items-center justify-between">
@@ -37,7 +37,10 @@ export default async function EditGroupPage({
           <EditGroupButton group={group} typeInvestments={typeInvestments} />
         </div>
 
-        <GroupHoldingsView holdings={group.holdings} />
+        <GroupHoldingsView
+          holdings={group.holdings}
+          typeInvestment={group.type}
+        />
       </>
     );
   } catch (error) {
