@@ -20,10 +20,18 @@ model User {
 }
 
 model TypeUser {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  permissions Permission[]
+  users       User[]
+}
+
+model Permission {
   id          String   @id @default(uuid())
   name        String   @unique
-  permissions String[] // Ej: ["IA_ANALYSIS", "EXPORT", ...]
-  users       User[]
+  description String
+  typeUser    TypeUser @relation(fields: [typeUserId], references: [id])
+  typeUserId  String
 }
 
 model Group {
@@ -40,7 +48,7 @@ model Group {
 
 model TypeInvestment {
   id           String  @id @default(uuid())
-  name         String // Ej: "Cedears", "Criptomonedas"
+  name         String // Ej: "Cedears", "Criptomonedas", "Acciones"
   scrappingUrl String
   currency     String // Ej: "USD", "ARS"
   groups       Group[]
