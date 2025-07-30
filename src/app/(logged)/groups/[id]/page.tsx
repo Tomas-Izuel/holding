@@ -18,7 +18,7 @@ export default async function EditGroupPage({
       getGroupById(id),
       getTypesInvestment(),
     ]);
-.
+
     return (
       <>
         <div className="mb-8 flex items-center justify-between">
