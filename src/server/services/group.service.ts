@@ -237,3 +237,28 @@ export async function getGroupById(id: string) {
     });
   }
 }
+
+export async function getAllGroupsForScraping() {
+  try {
+    const groups = await prisma.group.findMany({
+      include: {
+        type: true,
+        holdings: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return groups;
+  } catch (error) {
+    console.log("[GET ALL GROUPS FOR SCRAPING ERROR]", error);
+    throw new Error("Error al obtener todos los grupos", {
+      cause: 500,
+    });
+  }
+}
