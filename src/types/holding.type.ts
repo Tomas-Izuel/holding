@@ -11,3 +11,11 @@ export type CreateHoldingSchemaType = z.infer<typeof CreateHoldingSchema>;
 export const UpdateHoldingSchema = z.object({
   name: z.string().min(1, { message: "El nombre de la holding es requerido" }),
 });
+
+export type ValidateHoldingResponseType = {
+  holding: {
+    name: string;
+    code: string;
+  };
+  isValid: boolean;
+};

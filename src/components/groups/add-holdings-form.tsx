@@ -81,7 +81,17 @@ export function AddHoldingsForm({
 
     setIsValidating(true);
     try {
-      const isValid = await validateHolding(data, groupTypeId);
+      if (!selectedType) {
+        throw new Error("Tipo de inversión no encontrado", {
+          cause: 500,
+        });
+      }
+
+      const isValid = await validateHolding(
+        data,
+        groupTypeId,
+        selectedType.name
+      );
 
       if (isValid) {
         const newHolding: CreateHoldingSchemaType = {

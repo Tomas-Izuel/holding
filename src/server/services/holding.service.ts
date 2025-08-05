@@ -2,9 +2,9 @@
 
 import { authMiddleware } from "@/server/middlewares/auth.middleware";
 import prisma from "@/server/lib/prisma";
-import redisClient from "@/server/lib/redis";
 import { CreateHoldingSchemaType } from "@/types/groups.type";
 import { invalidateDashboardCache } from "./dashboard.service";
+import { ValidateHoldingResponseType } from "@/types/holding.type";
 
 export async function createHoldings(
   holdings: CreateHoldingSchemaType[],
@@ -35,56 +35,37 @@ export async function createHoldings(
 
 export async function validateHolding(
   holding: CreateHoldingSchemaType,
-  groupId: string
+  typeInvestmentId: string,
+  groupName: string
 ) {
-  const group = await prisma.group.findUnique({
-    where: {
-      id: groupId,
-    },
-    include: {
-      type: true,
-    },
+  await authMiddleware();
+  console.log({
+    name: holding.name,
+    code: holding.code,
+    typeInvestmentId,
+    groupName,
   });
-
-  if (!group) {
-    throw new Error("Grupo no encontrado", {
-      cause: 404,
-    });
-  }
-
   try {
-    // Crear una clave única para el cache basada en el tipo de investment y el código del holding
-    const cacheKey = `holding_validation:${group.type.name}:${holding.code}`;
-
-    // Verificar si ya existe una validación cacheada
-    const cachedValidation = await redisClient.get(cacheKey);
-
-    if (cachedValidation) {
-      console.log(
-        `[CACHE HIT] Validación cacheada encontrada para ${holding.code} en ${group.type.name}`
-      );
-      return JSON.parse(cachedValidation);
-    }
-
-    // Simular el tiempo de respuesta del scraper
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    //const isValid = send holding to scrapper
-    const validationResult = true;
-
-    // Cachear la validación por 1 mes (30 días en segundos)
-    const oneMonthInSeconds = 30 * 24 * 60 * 60;
-    await redisClient.setEx(
-      cacheKey,
-      oneMonthInSeconds,
-      JSON.stringify(validationResult)
+    const response = await fetch(
+      process.env.SNAPSHOT_SERVICE_URL + "/validate",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name: holding.name,
+          code: holding.code,
+          typeInvestmentId,
+          groupName,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${process.env.SNAPSHOT_SERVICE_API_KEY}`,
+        },
+      }
     );
 
-    console.log(
-      `[CACHE SET] Validación cacheada para ${holding.code} en ${group.type.name} por 1 mes`
-    );
+    const data: ValidateHoldingResponseType = await response.json();
 
-    return validationResult;
+    return data.isValid;
   } catch (error) {
     console.log("[VALIDATE HOLDING ERROR]", error);
     throw new Error("Error al validar el holding", {
