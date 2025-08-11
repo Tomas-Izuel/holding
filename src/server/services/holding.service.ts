@@ -39,12 +39,6 @@ export async function validateHolding(
   groupName: string
 ) {
   await authMiddleware();
-  console.log({
-    name: holding.name,
-    code: holding.code,
-    typeInvestmentId,
-    groupName,
-  });
   try {
     const response = await fetch(
       process.env.SNAPSHOT_SERVICE_URL + "/validate",
