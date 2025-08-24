@@ -52,15 +52,18 @@ model TypeInvestment {
   scrappingUrl String
   currency     String // Ej: "USD", "ARS"
   groups       Group[]
+  assets       Asset[]
 }
 
 model Asset {
-  id        String    @id @default(uuid())
+  id        String         @id @default(uuid())
   name      String // Ej: "Apple", "BTC"
   code      String // Ej: "AAPL", "BTC"
+  type      TypeInvestment @relation(fields: [typeId], references: [id])
+  typeId    String
   lastPrice Float?
   isValid   Boolean?
-  createdAt DateTime  @default(now())
+  createdAt DateTime       @default(now())
   holdings  Holding[]
 }
 

@@ -162,7 +162,7 @@ export default async function DashboardPage() {
                         </div>
                         <div>
                           <h3 className="font-semibold text-white group-hover:text-orange-400 transition-colors">
-                            {holding.name}
+                            {holding.asset.name}
                           </h3>
                           <p className="text-sm text-muted-foreground">
                             Ver detalles →

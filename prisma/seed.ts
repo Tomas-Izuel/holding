@@ -144,6 +144,7 @@ async function main() {
         code: "AAPL",
         lastPrice: 150.25,
         isValid: true,
+        typeId: cedearsType.id,
       },
     }),
     prisma.asset.create({
@@ -152,6 +153,7 @@ async function main() {
         code: "MSFT",
         lastPrice: 320.75,
         isValid: true,
+        typeId: cedearsType.id,
       },
     }),
     prisma.asset.create({
@@ -160,6 +162,7 @@ async function main() {
         code: "TSLA",
         lastPrice: 245.3,
         isValid: true,
+        typeId: cedearsType.id,
       },
     }),
 
@@ -170,6 +173,7 @@ async function main() {
         code: "BTC",
         lastPrice: 45000.0,
         isValid: true,
+        typeId: cryptoType.id,
       },
     }),
     prisma.asset.create({
@@ -178,6 +182,7 @@ async function main() {
         code: "ETH",
         lastPrice: 3200.0,
         isValid: true,
+        typeId: cryptoType.id,
       },
     }),
 
@@ -188,6 +193,7 @@ async function main() {
         code: "GOOGL",
         lastPrice: 2800.0,
         isValid: true,
+        typeId: stocksType.id,
       },
     }),
     prisma.asset.create({
@@ -196,6 +202,7 @@ async function main() {
         code: "AMZN",
         lastPrice: 3400.0,
         isValid: true,
+        typeId: stocksType.id,
       },
     }),
   ]);

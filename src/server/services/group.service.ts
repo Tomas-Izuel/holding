@@ -71,7 +71,7 @@ export async function createGroup(data: GroupDTOSchemaType) {
     });
 
     if (data.holdings) {
-      await createHoldings(data.holdings, group.id);
+      await createHoldings(data.holdings, group.id, data.typeId);
     }
 
     // Invalidar cache del dashboard después de crear grupo
@@ -171,7 +171,7 @@ export async function updateGroup(
       });
 
       // Crear nuevos holdings
-      await createHoldings(data.holdings, group.id);
+      await createHoldings(data.holdings, group.id, group.typeId);
     }
 
     // Invalidar cache del dashboard después de actualizar grupo

@@ -1,13 +1,16 @@
 "use server";
 
-import { Holding } from "@prisma/client";
+import { Holding, Asset } from "@prisma/client";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import prisma from "@/server/lib/prisma";
 import { ProfileResume } from "@/types/dashboard.types";
 import { cacheManager, dashboardCache } from "@/server/utils/cache.utils";
 
 export const getBestHoldingsDashboard = async (): Promise<
-  Holding[] | Error
+  | (Holding & {
+      asset: Asset;
+    })[]
+  | Error
 > => {
   const user = await authMiddleware();
 
@@ -38,6 +41,7 @@ export const getBestHoldingsDashboard = async (): Promise<
                 type: true,
               },
             },
+            asset: true,
           },
         });
       }

@@ -8,7 +8,8 @@ import { ValidateHoldingResponseType } from "@/types/holding.type";
 
 export async function createHoldings(
   holdings: CreateHoldingSchemaType[],
-  groupId: string
+  groupId: string,
+  typeInvestmentId: string
 ) {
   const user = await authMiddleware();
 
@@ -21,7 +22,11 @@ export async function createHoldings(
     const holdingsWithAssets = [];
 
     for (const holding of holdings) {
-      const asset = await getOrCreateAsset(holding.name, holding.code);
+      const asset = await getOrCreateAsset(
+        holding.name,
+        holding.code,
+        typeInvestmentId
+      );
       holdingsWithAssets.push({
         assetId: asset.id,
         groupId,
@@ -84,7 +89,11 @@ export async function validateHolding(
     const data: ValidateHoldingResponseType = await response.json();
 
     // Buscar o crear el asset y actualizar su estado de validación
-    const asset = await getOrCreateAsset(holding.name, holding.code);
+    const asset = await getOrCreateAsset(
+      holding.name,
+      holding.code,
+      typeInvestmentId
+    );
     await prisma.asset.update({
       where: { id: asset.id },
       data: {
@@ -105,7 +114,11 @@ export async function validateHolding(
   }
 }
 
-export async function getOrCreateAsset(name: string, code: string) {
+export async function getOrCreateAsset(
+  name: string,
+  code: string,
+  typeInvestmentId: string
+) {
   try {
     // Buscar asset existente por código
     let asset = await prisma.asset.findFirst({
@@ -129,6 +142,7 @@ export async function getOrCreateAsset(name: string, code: string) {
         name,
         code,
         isValid: null, // Se determinará cuando se valide
+        typeId: typeInvestmentId,
       },
     });
 
