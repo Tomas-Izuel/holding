@@ -24,7 +24,11 @@ export async function getGroups(): Promise<GetGroupDTO[]> {
       },
       include: {
         type: true,
-        holdings: true,
+        holdings: {
+          include: {
+            asset: true,
+          },
+        },
       },
     });
 
@@ -216,7 +220,11 @@ export async function getGroupById(id: string) {
       },
       include: {
         type: true,
-        holdings: true,
+        holdings: {
+          include: {
+            asset: true,
+          },
+        },
       },
     });
 
@@ -243,7 +251,11 @@ export async function getAllGroupsForScraping() {
     const groups = await prisma.group.findMany({
       include: {
         type: true,
-        holdings: true,
+        holdings: {
+          include: {
+            asset: true,
+          },
+        },
         user: {
           select: {
             id: true,

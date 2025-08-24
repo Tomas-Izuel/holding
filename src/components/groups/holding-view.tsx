@@ -1,9 +1,11 @@
-import type { Holding, TypeInvestment } from "@prisma/client";
+import type { Holding, TypeInvestment, Asset } from "@prisma/client";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import Link from "next/link";
 
 interface HoldingViewProps {
-  holding: Holding;
+  holding: Holding & {
+    asset: Asset;
+  };
   typeInvestment: TypeInvestment;
 }
 
@@ -12,12 +14,12 @@ const HoldingView = ({ holding, typeInvestment }: HoldingViewProps) => {
   const earningsPercentage = holding.earnings
     ? `${holding.earnings > 0 ? "+" : ""}${holding.earnings.toFixed(2)}%`
     : "-";
-  const formattedPrice = holding.lastPrice
-    ? `$${holding.lastPrice.toFixed(2)} ${typeInvestment.currency}`
+  const formattedPrice = holding.asset.lastPrice
+    ? `$${holding.asset.lastPrice.toFixed(2)} ${typeInvestment.currency}`
     : "-";
 
-  const formattedTotal = holding.lastPrice
-    ? `$${(holding.lastPrice * holding.quantity).toFixed(2)} ${
+  const formattedTotal = holding.asset.lastPrice
+    ? `$${(holding.asset.lastPrice * holding.quantity).toFixed(2)} ${
         typeInvestment.currency
       }`
     : "-";
@@ -29,10 +31,10 @@ const HoldingView = ({ holding, typeInvestment }: HoldingViewProps) => {
           <div className="flex-1">
             <CardHeader className="p-0 space-y-1">
               <CardDescription className="text-gray-400 text-sm">
-                {holding.name}
+                {holding.asset.name}
               </CardDescription>
               <CardTitle className="text-white text-lg font-medium">
-                {holding.code}
+                {holding.asset.code}
               </CardTitle>
               <CardDescription className="text-gray-400 text-sm">
                 {holding.quantity} holdings

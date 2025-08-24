@@ -134,39 +134,99 @@ async function main() {
     },
   });
 
+  // Crear assets
+  console.log("💼 Creando assets...");
+  const assets = await Promise.all([
+    // Assets para Cedears
+    prisma.asset.create({
+      data: {
+        name: "Apple",
+        code: "AAPL",
+        lastPrice: 150.25,
+        isValid: true,
+      },
+    }),
+    prisma.asset.create({
+      data: {
+        name: "Microsoft",
+        code: "MSFT",
+        lastPrice: 320.75,
+        isValid: true,
+      },
+    }),
+    prisma.asset.create({
+      data: {
+        name: "Tesla",
+        code: "TSLA",
+        lastPrice: 245.3,
+        isValid: true,
+      },
+    }),
+
+    // Assets para Criptomonedas
+    prisma.asset.create({
+      data: {
+        name: "Bitcoin",
+        code: "BTC",
+        lastPrice: 45000.0,
+        isValid: true,
+      },
+    }),
+    prisma.asset.create({
+      data: {
+        name: "Ethereum",
+        code: "ETH",
+        lastPrice: 3200.0,
+        isValid: true,
+      },
+    }),
+
+    // Assets para Acciones US
+    prisma.asset.create({
+      data: {
+        name: "Alphabet Inc.",
+        code: "GOOGL",
+        lastPrice: 2800.0,
+        isValid: true,
+      },
+    }),
+    prisma.asset.create({
+      data: {
+        name: "Amazon",
+        code: "AMZN",
+        lastPrice: 3400.0,
+        isValid: true,
+      },
+    }),
+  ]);
+
   // Crear holdings
   console.log("📈 Creando holdings...");
   const holdings = await Promise.all([
     // Cedears
     prisma.holding.create({
       data: {
-        name: "Apple",
-        code: "AAPL",
+        assetId: assets[0].id, // Apple
         groupId: cedearsGroup.id,
         quantity: 10,
-        lastPrice: 150.25,
         earnings: 125.5,
         relativeEarnings: 5.2,
       },
     }),
     prisma.holding.create({
       data: {
-        name: "Microsoft",
-        code: "MSFT",
+        assetId: assets[1].id, // Microsoft
         groupId: cedearsGroup.id,
         quantity: 5,
-        lastPrice: 320.75,
         earnings: 45.25,
         relativeEarnings: 2.8,
       },
     }),
     prisma.holding.create({
       data: {
-        name: "Tesla",
-        code: "TSLA",
+        assetId: assets[2].id, // Tesla
         groupId: cedearsGroup.id,
         quantity: 8,
-        lastPrice: 245.3,
         earnings: -15.7,
         relativeEarnings: -2.1,
       },
@@ -175,22 +235,18 @@ async function main() {
     // Criptomonedas
     prisma.holding.create({
       data: {
-        name: "Bitcoin",
-        code: "BTC",
+        assetId: assets[3].id, // Bitcoin
         groupId: cryptoGroup.id,
         quantity: 0.5,
-        lastPrice: 45000.0,
         earnings: 2500.0,
         relativeEarnings: 5.9,
       },
     }),
     prisma.holding.create({
       data: {
-        name: "Ethereum",
-        code: "ETH",
+        assetId: assets[4].id, // Ethereum
         groupId: cryptoGroup.id,
         quantity: 2.5,
-        lastPrice: 3200.0,
         earnings: 400.0,
         relativeEarnings: 14.3,
       },
@@ -199,22 +255,18 @@ async function main() {
     // Acciones US
     prisma.holding.create({
       data: {
-        name: "Alphabet Inc.",
-        code: "GOOGL",
+        assetId: assets[5].id, // Alphabet
         groupId: stocksGroup.id,
         quantity: 3,
-        lastPrice: 2800.0,
         earnings: 150.0,
         relativeEarnings: 5.7,
       },
     }),
     prisma.holding.create({
       data: {
-        name: "Amazon",
-        code: "AMZN",
+        assetId: assets[6].id, // Amazon
         groupId: stocksGroup.id,
         quantity: 2,
-        lastPrice: 3400.0,
         earnings: 200.0,
         relativeEarnings: 6.3,
       },
@@ -227,6 +279,7 @@ async function main() {
   console.log(`   - 2 usuarios (admin@holding.com, usuario@holding.com)`);
   console.log(`   - 3 tipos de inversión`);
   console.log(`   - 3 grupos de inversión`);
+  console.log(`   - ${assets.length} assets`);
   console.log(`   - ${holdings.length} holdings`);
   console.log(`\n🔑 Credenciales de prueba:`);
   console.log(`   Email: usuario@holding.com`);

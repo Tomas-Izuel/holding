@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Group, Holding, TypeInvestment } from "@prisma/client";
+import { Group, Holding, TypeInvestment, Asset } from "@prisma/client";
 
 export const CreateGroupSchema = z.object({
   name: z.string().min(1, { message: "El nombre del grupo es requerido" }),
@@ -32,5 +32,7 @@ export type GroupDTOSchemaType = z.infer<typeof GroupDTOSchema>;
 
 export type GetGroupDTO = Group & {
   type: TypeInvestment;
-  holdings: Holding[];
+  holdings: (Holding & {
+    asset: Asset;
+  })[];
 };

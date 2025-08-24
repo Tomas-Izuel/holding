@@ -16,6 +16,7 @@ export type ValidateHoldingResponseType = {
   holding: {
     name: string;
     code: string;
+    lastPrice?: number;
   };
   isValid: boolean;
 };

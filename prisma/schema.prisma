@@ -54,14 +54,23 @@ model TypeInvestment {
   groups       Group[]
 }
 
+model Asset {
+  id        String    @id @default(uuid())
+  name      String // Ej: "Apple", "BTC"
+  code      String // Ej: "AAPL", "BTC"
+  lastPrice Float?
+  isValid   Boolean?
+  createdAt DateTime  @default(now())
+  holdings  Holding[]
+}
+
 model Holding {
   id               String     @id @default(uuid())
-  name             String // Ej: "Apple", "BTC"
-  code             String // Ej: "AAPL", "BTC"
+  asset            Asset      @relation(fields: [assetId], references: [id])
+  assetId          String
   group            Group      @relation(fields: [groupId], references: [id])
   groupId          String
   quantity         Float
-  lastPrice        Float?
   earnings         Float?
   relativeEarnings Float? // Porcentaje de ganancia o pérdida en relación al snapshot anterior
   snapshots        Snapshot[]
