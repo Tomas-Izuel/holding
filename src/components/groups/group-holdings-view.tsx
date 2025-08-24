@@ -1,8 +1,10 @@
-import { Holding, TypeInvestment } from "@prisma/client";
+import { Holding, TypeInvestment, Asset } from "@prisma/client";
 import HoldingView from "./holding-view";
 
 interface GroupHoldingsViewProps {
-  holdings: Holding[];
+  holdings: (Holding & {
+    asset: Asset;
+  })[];
   typeInvestment: TypeInvestment;
 }
 

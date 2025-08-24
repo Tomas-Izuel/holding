@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { GroupDetailsForm } from "@/components/groups/group-details-form";
 import { AddHoldingsForm } from "@/components/groups/add-holdings-form";
-import { TypeInvestment, Group, Holding } from "@prisma/client";
+import { TypeInvestment, Group, Holding, Asset } from "@prisma/client";
 import { CreateHoldingSchemaType } from "@/types/groups.type";
 import { updateGroup } from "@/server/services/group.service";
 import { toast } from "sonner";
@@ -23,7 +23,9 @@ import { Pencil } from "lucide-react";
 interface EditGroupFormProps {
   group: Group & {
     type: TypeInvestment;
-    holdings: Holding[];
+    holdings: (Holding & {
+      asset: Asset;
+    })[];
   };
   typeInvestments: TypeInvestment[];
 }
@@ -36,8 +38,8 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
     name: group.name,
     typeId: group.typeId,
     holdings: group.holdings.map((h) => ({
-      name: h.name,
-      code: h.code,
+      name: h.asset.name,
+      code: h.asset.code,
     })) as CreateHoldingSchemaType[],
   });
 

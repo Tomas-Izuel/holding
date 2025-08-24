@@ -24,7 +24,11 @@ export async function getGroups(): Promise<GetGroupDTO[]> {
       },
       include: {
         type: true,
-        holdings: true,
+        holdings: {
+          include: {
+            asset: true,
+          },
+        },
       },
     });
 
@@ -67,7 +71,7 @@ export async function createGroup(data: GroupDTOSchemaType) {
     });
 
     if (data.holdings) {
-      await createHoldings(data.holdings, group.id);
+      await createHoldings(data.holdings, group.id, data.typeId);
     }
 
     // Invalidar cache del dashboard después de crear grupo
@@ -167,7 +171,7 @@ export async function updateGroup(
       });
 
       // Crear nuevos holdings
-      await createHoldings(data.holdings, group.id);
+      await createHoldings(data.holdings, group.id, group.typeId);
     }
 
     // Invalidar cache del dashboard después de actualizar grupo
@@ -216,7 +220,11 @@ export async function getGroupById(id: string) {
       },
       include: {
         type: true,
-        holdings: true,
+        holdings: {
+          include: {
+            asset: true,
+          },
+        },
       },
     });
 
@@ -243,7 +251,11 @@ export async function getAllGroupsForScraping() {
     const groups = await prisma.group.findMany({
       include: {
         type: true,
-        holdings: true,
+        holdings: {
+          include: {
+            asset: true,
+          },
+        },
         user: {
           select: {
             id: true,

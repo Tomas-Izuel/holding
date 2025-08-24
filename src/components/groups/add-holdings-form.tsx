@@ -87,11 +87,7 @@ export function AddHoldingsForm({
         });
       }
 
-      const isValid = await validateHolding(
-        data,
-        groupTypeId,
-        selectedType.name
-      );
+      const isValid = await validateHolding(data, groupTypeId);
 
       if (isValid) {
         const newHolding: CreateHoldingSchemaType = {

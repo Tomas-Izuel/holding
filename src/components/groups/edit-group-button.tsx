@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { TypeInvestment, Group, Holding } from "@prisma/client";
+import { TypeInvestment, Group, Holding, Asset } from "@prisma/client";
 
 // Importación dinámica para optimizar el rendimiento
 const EditGroupForm = dynamic(
@@ -22,7 +22,9 @@ const EditGroupForm = dynamic(
 interface EditGroupButtonProps {
   group: Group & {
     type: TypeInvestment;
-    holdings: Holding[];
+    holdings: (Holding & {
+      asset: Asset;
+    })[];
   };
   typeInvestments: TypeInvestment[];
 }
