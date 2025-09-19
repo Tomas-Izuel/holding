@@ -88,7 +88,7 @@ async function main() {
     data: {
       name: "Cedears",
       scrappingUrl: "https://api.example.com/cedears",
-      currency: "ARS",
+      currency: "USD",
     },
   });
 

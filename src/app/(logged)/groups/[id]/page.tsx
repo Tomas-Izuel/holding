@@ -23,7 +23,9 @@ export default async function EditGroupPage({
       <>
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Detalles del grupo</h1>
+            <h1 className="text-3xl font-bold">
+              Detalles del grupo - {group.name}
+            </h1>
             <p className="text-muted-foreground mt-2">
               Tipo de inversión: {group.type.name}
             </p>

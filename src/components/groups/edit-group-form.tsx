@@ -40,6 +40,7 @@ export function EditGroupForm({ group, typeInvestments }: EditGroupFormProps) {
     holdings: group.holdings.map((h) => ({
       name: h.asset.name,
       code: h.asset.code,
+      quantity: h.quantity,
     })) as CreateHoldingSchemaType[],
   });
 

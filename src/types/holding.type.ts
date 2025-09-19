@@ -1,3 +1,4 @@
+import { Asset, Snapshot, TypeInvestment } from "@prisma/client";
 import { z } from "zod";
 
 export const CreateHoldingSchema = z.object({
@@ -14,9 +15,19 @@ export const UpdateHoldingSchema = z.object({
 
 export type ValidateHoldingResponseType = {
   holding: {
-    name: string;
     code: string;
     lastPrice?: number;
   };
   isValid: boolean;
+};
+
+export type HoldingType = {
+  id: string;
+  quantity: number;
+  earnings: number;
+  relativeEarnings: number;
+  asset: Asset & {
+    type: TypeInvestment;
+  };
+  snapshots: Snapshot[];
 };
